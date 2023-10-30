@@ -1,1 +1,1 @@
-# si-for-seo
+# ai-for-seo
