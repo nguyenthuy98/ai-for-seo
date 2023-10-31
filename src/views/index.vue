@@ -4,7 +4,7 @@
       <el-aside class="aside">
         <el-row :gutter="8">
           <el-col :span="18">
-            <el-input v-model="searchText" placeholder="Outline"></el-input>
+            <el-input v-model="keyWords" placeholder="Outline"></el-input>
           </el-col>
           <el-col :span="6">
             <el-button type="primary" @click="handleCreateOutline"
@@ -35,8 +35,10 @@
 
 <script>
 
+import aiService from '../services/ai-services';
 import OutLine from '../components/OutLine';
 import Content from '../components/Content';
+import { randomstring } from '../utils/common';
 
 export default {
   name: 'Home',
@@ -46,7 +48,7 @@ export default {
   },
   data() {
     return {
-      searchText: '',
+      keyWords: '',
       outlineList: [
         {
           id: '1',
@@ -100,11 +102,24 @@ export default {
         },
       ],
       key: 1,
+      isCreatingOutline: false,
     };
   },
   methods: {
-    handleCreateOutline() {
-      //
+    randomstring,
+    async handleCreateOutline() {
+      try {
+        this.isCreatingOutline = true;
+        const data = {
+          keywords: this.keyWords,
+          hash_id: this.randomstring(),
+        };
+        const res = await aiService.generateOutline(data);
+        console.log(res);
+        this.isCreatingOutline = false;
+      } catch (error) {
+        this.isCreatingOutline = false;
+      }
     },
     handleRemoveOutline(outlineId) {
       const findIndexById = this.outlineList.findIndex((obj) => obj?.id === outlineId);

@@ -9,6 +9,22 @@
   </div>
 </template>
 
+<script>
+import { copyText } from '../utils/common';
+
+export default {
+  name: 'Content',
+  props: {
+    data: {
+      type: Object,
+      default: () => {},
+    },
+  },
+  methods: {
+    copyText,
+  },
+};
+</script>
 <style lang="scss" scoped>
 .content-card {
   margin-top: 40px;

@@ -6,8 +6,9 @@ const instance = axios.create({
   baseURL: process.env.VUE_APP_BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
   },
-  timeout: 300000, // request timeout
+  timeout: 30000000000000, // request timeout
 });
 
 instance.interceptors.response.use(
