@@ -24,11 +24,10 @@ async function regenerateContentH2(data) {
   });
 }
 
-async function getState(data, hashId) {
+async function getState(hashId) {
   return axios({
     url: `get_state/${hashId}`,
-    method: 'post',
-    data,
+    method: 'get',
   });
 }
 

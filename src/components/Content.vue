@@ -1,6 +1,13 @@
 <template>
   <div>
-    <el-card class="content-card" :loading="true">
+    <el-card class="content-card">
+      <div v-if="loading" class="card is-loading">
+        <el-card class="mb-m">
+          <h2></h2>
+          <p></p>
+          <p></p>
+        </el-card>
+      </div>
       <div class="content-card-footer">
         <el-button type="primary" plain>Export</el-button>
         <el-button type="primary" plain>Copy</el-button>
@@ -16,8 +23,12 @@ export default {
   name: 'Content',
   props: {
     data: {
-      type: Object,
-      default: () => {},
+      type: String,
+      default: '',
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   methods: {
@@ -28,7 +39,7 @@ export default {
 <style lang="scss" scoped>
 .content-card {
   margin-top: 40px;
-  height: 78vh;
+  height: 82vh;
   position: relative;
 }
 .content-card-footer {

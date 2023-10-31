@@ -11,15 +11,15 @@
         <transition-group type="transition" name="flip-list">
           <div
             class="list-group-item"
-            v-for="element in outlineData"
-            :key="element?.id"
+            v-for="(element, index) in outlineData"
+            :key="element"
           >
             <card-item
-              :key="element?.id"
+              :key="index"
               :data="element"
               @sendData="handleSendData"
               @rewrite="handleRewriteData"
-              @remove="handleRemoveOutLine(element?.id)"
+              @remove="handleRemoveOutLine(index)"
             />
           </div>
         </transition-group>
@@ -43,6 +43,10 @@ export default {
       type: Array,
       default: () => [],
     },
+    loading: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -58,8 +62,10 @@ export default {
       };
     },
     outlineData() {
-      console.log(this.data);
-      return this.data;
+      return this.data.map((item) => {
+        const test = item.split('\n');
+        return test;
+      });
     },
   },
   methods: {
@@ -91,7 +97,7 @@ export default {
   background: #c8ebfb;
 }
 .list-group {
-  height: 70vh;
+  height: 76vh;
   overflow: scroll;
   margin-top: 24px;
 }

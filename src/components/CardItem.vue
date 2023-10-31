@@ -1,71 +1,63 @@
 <template>
-  <div>
-    <el-card
-      shadow="hover"
-      class="card-item"
-      @mouseover.native="handleHoverCard"
-      @mouseleave.native="handleLeaveCard"
-    >
-      <el-row class="card-item-header" :gutter="8">
-        <el-col :span="20">
-          <p>{{ data?.id }}</p>
-        </el-col>
-        <el-col :span="4" class="text-right">
-          <i
-            v-if="isHover || isEditMode"
-            class="el-icon-close"
-            @click="handleRemoveCardItem"
-          ></i>
+  <el-card
+    shadow="hover"
+    class="card-item"
+    @mouseover.native="handleHoverCard"
+    @mouseleave.native="handleLeaveCard"
+  >
+    <el-row class="card-item-header" :gutter="8">
+      <el-col :span="20">
+        <p class="mb-4">{{ data?.[0] }}</p>
+      </el-col>
+      <el-col :span="4" class="text-right">
+        <i
+          v-if="isHover || isEditMode"
+          class="el-icon-close"
+          @click="handleRemoveCardItem"
+        ></i>
+      </el-col>
+    </el-row>
+    <el-form ref="form" :model="form" :rules="rules">
+      <el-row class="card-item-body">
+        <el-form-item prop="content" v-if="isEditMode">
+          <el-input
+            v-model="form.content"
+            type="textarea"
+            autosize
+            placeholder="Nội dung"
+          >
+          </el-input>
+        </el-form-item>
+        <pre class="common-font" v-else>{{ outlineContent }}</pre>
+      </el-row>
+      <el-row class="card-item-footer" v-if="isHover || isEditMode">
+        <el-col :span="10" class="footer-left"
+          ><el-form-item prop="count" v-if="isEditMode">
+            <el-input v-model="form.count" type="input" placeholder="Số từ">
+            </el-input>
+            <span class="ml-4">Words</span>
+          </el-form-item>
+          <span v-else>{{ data?.words ?? 0 }} Words</span></el-col
+        >
+        <el-col :span="14" class="footer-right text-right">
+          <div v-if="isEditMode">
+            <el-button type="primary" plain @click="handleSave">Lưu</el-button>
+            <el-button type="danger" plain @click="handleCancel"
+              >Hủy bỏ</el-button
+            >
+          </div>
+          <div v-else>
+            <el-button type="primary" plain @click="handleRewrite"
+              >Viết lại</el-button
+            >
+            <el-button type="success" plain @click="handleEdit"
+              >Chỉnh sửa</el-button
+            >
+          </div>
         </el-col>
       </el-row>
-      <el-form ref="form" :model="form" :rules="rules">
-        <el-row class="card-item-body">
-          <el-form-item prop="content" v-if="isEditMode">
-            <el-input
-              v-model="form.content"
-              type="textarea"
-              :rows="2"
-              placeholder="Nội dung"
-            >
-            </el-input>
-          </el-form-item>
-          <p v-else>{{ data?.content }}</p>
-        </el-row>
-        <el-row class="card-item-footer" v-if="isHover || isEditMode">
-          <el-col :span="10" class="footer-left"
-            ><el-form-item prop="count" v-if="isEditMode">
-              <el-input
-                v-model="form.count"
-                type="input"
-                placeholder="Số từ"
-              >
-              </el-input>
-              Words
-            </el-form-item>
-            <p v-else>{{ data?.count }} Words</p></el-col
-          >
-          <el-col :span="14" class="footer-right text-right">
-            <div v-if="isEditMode">
-              <el-button type="primary" plain @click="handleSave"
-                >Lưu</el-button
-              >
-              <el-button type="danger" plain @click="handleCancel"
-                >Hủy bỏ</el-button
-              >
-            </div>
-            <div v-else>
-              <el-button type="primary" plain @click="handleRewrite"
-                >Viết lại</el-button
-              >
-              <el-button type="success" plain @click="handleEdit"
-                >Chỉnh sửa</el-button
-              >
-            </div>
-          </el-col>
-        </el-row>
-      </el-form>
-    </el-card>
-  </div>
+    </el-form>
+  </el-card>
 </template>
 
 <script>
@@ -76,8 +68,30 @@ export default {
   name: 'CardItem',
   props: {
     data: {
-      type: Object,
-      default: () => {},
+      type: Array,
+      default: () => [],
+    },
+  },
+  computed: {
+    outlineContent() {
+      let temp = '';
+      this.data.forEach((item, index) => {
+        if (index === 1) {
+          temp = item;
+        } else if (index !== 0) {
+          temp = `${temp}\n${item}`;
+        }
+      });
+      return temp;
+    },
+  },
+  watch: {
+    outlineContent: {
+      handler() {
+        this.form.content = this.outlineContent;
+      },
+      deep: true,
+      immediate: true,
     },
   },
   data() {
@@ -85,8 +99,8 @@ export default {
       isHover: false,
       isEditMode: false,
       form: {
-        content: this.data?.content,
-        count: this.data?.count,
+        content: '',
+        count: this.data?.words ?? 0,
       },
       rules: {
         content: [

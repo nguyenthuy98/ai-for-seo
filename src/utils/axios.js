@@ -8,7 +8,7 @@ const instance = axios.create({
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
   },
-  timeout: 30000000000000, // request timeout
+  timeout: 300000, // request timeout
 });
 
 instance.interceptors.response.use(
