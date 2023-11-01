@@ -10,15 +10,27 @@
     <el-card v-else class="content-card">
       <div class="main-content-card" id="card-content">
         <div id="content" v-html="contentData"></div>
-        <div v-if="images?.length > 0">
+        <div v-if="images?.length > 0 && isShowContent">
           <div v-for="image in images" :key="image">
             <img :src="image" alt="image" />
           </div>
         </div>
       </div>
       <div v-if="!loading" class="content-card-footer">
-        <el-button type="primary" plain @click="handleExport">Export</el-button>
-        <el-button type="primary" plain @click="handleCopyText">Copy</el-button>
+        <el-button
+          :disabled="!isShowContent"
+          type="primary"
+          plain
+          @click="handleExport"
+          >Export</el-button
+        >
+        <el-button
+          :disabled="!isShowContent"
+          type="primary"
+          plain
+          @click="handleCopyText"
+          >Copy</el-button
+        >
       </div>
     </el-card>
   </div>
@@ -79,6 +91,9 @@ export default {
       const text = this.data;
       const html = converter.makeHtml(text);
       return html;
+    },
+    isShowContent() {
+      return this.data?.length > 0;
     },
   },
 };

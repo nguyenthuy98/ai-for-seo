@@ -10,12 +10,13 @@
         <div
           class="list-group-item"
           v-for="(element, index) in outlineData"
-          :key="`${index}-key`"
+          :key="element?.id"
         >
           <card-item
-            :key="index"
+            :key="element?.id"
             :itemIndex="index"
-            :data="element"
+            :data="element?.item"
+            :isWritedContent="isWritedContent"
             @sendData="handleSendData"
             @rewrite="handleRewriteData"
             @remove="handleRemoveOutLine(index)"
@@ -46,9 +47,14 @@ export default {
       type: Boolean,
       default: false,
     },
+    isWritedContent: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
+      isDragging: false,
     };
   },
   computed: {
@@ -61,9 +67,12 @@ export default {
       };
     },
     outlineData() {
-      return this.data.map((item) => {
+      return this.data.map((item, index) => {
         const temp = item.split('\n');
-        return temp;
+        return {
+          id: index,
+          item: temp,
+        };
       });
     },
   },
@@ -98,6 +107,11 @@ export default {
   .ghost {
     opacity: 0.5;
     background: #c8ebfb;
+  }
+  .list-group {
+    height: 70vh;
+    overflow: scroll;
+    margin-top: 24px;
   }
   .list-group-item {
     cursor: move;

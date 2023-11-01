@@ -49,7 +49,11 @@
             >
           </div>
           <div v-else>
-            <el-button type="primary" plain @click="handleRewrite"
+            <el-button
+              :disabled="isWritedContent"
+              type="primary"
+              plain
+              @click="handleRewrite"
               >Viết lại</el-button
             >
             <el-button type="success" plain @click="handleEdit"
@@ -76,6 +80,10 @@ export default {
     itemIndex: {
       type: Number,
       default: 0,
+    },
+    isWritedContent: {
+      type: Boolean,
+      default: true,
     },
   },
   computed: {
