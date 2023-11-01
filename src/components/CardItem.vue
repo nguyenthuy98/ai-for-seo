@@ -5,40 +5,42 @@
     @mouseover.native="handleHoverCard"
     @mouseleave.native="handleLeaveCard"
   >
-    <el-row class="card-item-header" :gutter="8">
-      <el-col :span="20">
-        <p class="mb-4">{{ data?.[0] }}</p>
-      </el-col>
-      <el-col :span="4" class="text-right">
-        <i
-          v-if="isHover || isEditMode"
-          class="el-icon-close"
-          @click="handleRemoveCardItem"
-        ></i>
-      </el-col>
-    </el-row>
     <el-form ref="form" :model="form" :rules="rules">
-      <el-row class="card-item-body">
-        <el-form-item prop="content" v-if="isEditMode">
-          <el-input
-            v-model="form.content"
-            type="textarea"
-            autosize
-            placeholder="Nội dung"
-          >
-          </el-input>
-        </el-form-item>
-        <pre class="common-font" v-else>{{ outlineContent }}</pre>
+      <el-row class="card-item-header" :gutter="8">
+        <el-col :span="20">
+          <el-row class="card-item-body">
+            <el-form-item prop="content" v-if="isEditMode">
+              <el-input
+                v-model="form.content"
+                type="textarea"
+                autosize
+                placeholder="Nội dung"
+              >
+              </el-input>
+            </el-form-item>
+            <pre class="common-font" v-else>{{ outlineContent }}</pre>
+          </el-row>
+        </el-col>
+        <el-col :span="4" class="text-right">
+          <i
+            v-if="isHover || isEditMode"
+            class="el-icon-close"
+            @click="handleRemoveCardItem"
+          ></i>
+        </el-col>
       </el-row>
       <el-row class="card-item-footer" v-if="isHover || isEditMode">
         <el-col :span="10" class="footer-left"
           ><el-form-item prop="count" v-if="isEditMode">
-            <el-input v-model="form.count" type="input" placeholder="Số từ">
+            <el-input
+              v-model.number="form.count"
+              type="input"
+              placeholder="Số từ"
+            >
             </el-input>
             <span class="ml-4">Words</span>
           </el-form-item>
-          <span v-else>{{ data?.words ?? 0 }} Words</span></el-col
-        >
+        </el-col>
         <el-col :span="14" class="footer-right text-right">
           <div v-if="isEditMode">
             <el-button type="primary" plain @click="handleSave">Lưu</el-button>
@@ -71,14 +73,18 @@ export default {
       type: Array,
       default: () => [],
     },
+    itemIndex: {
+      type: Number,
+      default: 0,
+    },
   },
   computed: {
     outlineContent() {
       let temp = '';
       this.data.forEach((item, index) => {
-        if (index === 1) {
+        if (index === 0) {
           temp = item;
-        } else if (index !== 0) {
+        } else {
           temp = `${temp}\n${item}`;
         }
       });
@@ -100,7 +106,7 @@ export default {
       isEditMode: false,
       form: {
         content: '',
-        count: this.data?.words ?? 0,
+        count: 0,
       },
       rules: {
         content: [
@@ -140,7 +146,7 @@ export default {
         if (valid) {
           this.isEditMode = false;
           this.$emit('sendData', {
-            id: this.data?.id,
+            index: this.itemIndex,
             form: this.form,
           });
         }
@@ -149,10 +155,15 @@ export default {
     handleCancel() {
       this.isEditMode = false;
       this.form.content = this.data?.content;
+      this.form.count = 0;
     },
     handleRewrite() {
-      this.isEditMode = true;
-      this.$emit('rewrite', this.data?.id);
+      console.log('2', this.form);
+      debugger;
+      this.$emit('rewrite', {
+        index: this.itemIndex,
+        form: this.form,
+      });
     },
     handleEdit() {
       this.isEditMode = true;

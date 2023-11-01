@@ -14,6 +14,7 @@
         >
           <card-item
             :key="index"
+            :itemIndex="index"
             :data="element"
             @sendData="handleSendData"
             @rewrite="handleRewriteData"
@@ -74,8 +75,8 @@ export default {
     handleSendData(data) {
       this.$emit('sendData', data);
     },
-    handleRewriteData(outlineId) {
-      this.$emit('rewrite', outlineId);
+    handleRewriteData(data) {
+      this.$emit('rewrite', data);
     },
   },
 };
@@ -83,7 +84,7 @@ export default {
 
 <style lang="scss">
 .outline-content {
-  height: 60vh;
+  height: 70vh;
   overflow: auto;
   .button {
     margin-top: 35px;

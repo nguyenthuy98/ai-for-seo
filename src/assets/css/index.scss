@@ -20,7 +20,7 @@ body {
   display: flex;
   border: none;
   margin-top: 24px;
-  border-radius: 5px;
+  border-radius: 12px;
   .content {
     padding: 20px 30px;
   }
@@ -30,7 +30,7 @@ body {
   p {
     background: #eee;
     background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-    border-radius: 5px;
+    border-radius: 12px;
     background-size: 200% 100%;
     animation: 1.5s shine linear infinite;
   }
@@ -62,4 +62,13 @@ body {
 }
 .title {
   font-weight: bold;
+}
+.p-col {
+  padding: 0px !important;
+}
+.float-right {
+  float: right;
+}
+.h-100 {
+  height: 100%;
 }
