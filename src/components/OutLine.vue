@@ -49,7 +49,7 @@ export default {
     },
     isWritedContent: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   data() {
@@ -79,8 +79,8 @@ export default {
   },
   methods: {
     randomstring,
-    handleRemoveOutLine(outlineId) {
-      this.$emit('remove', outlineId);
+    handleRemoveOutLine(index) {
+      this.$emit('remove', index);
     },
     handleSendData(data) {
       this.$emit('sendData', data);

@@ -6,8 +6,8 @@
     @mouseleave.native="handleLeaveCard"
   >
     <el-form ref="form" :model="form" :rules="rules">
-      <el-row class="card-item-header" :gutter="8">
-        <el-col :span="20">
+      <el-row class="card-item-header">
+        <el-col :span="23">
           <el-row class="card-item-body">
             <el-form-item prop="content" v-if="isEditMode">
               <el-input
@@ -21,7 +21,7 @@
             <pre class="common-font" v-else>{{ outlineContent }}</pre>
           </el-row>
         </el-col>
-        <el-col :span="4" class="text-right">
+        <el-col :span="1" class="text-right">
           <i
             v-if="isHover || isEditMode"
             class="el-icon-close"
@@ -50,7 +50,7 @@
           </div>
           <div v-else>
             <el-button
-              :disabled="isWritedContent"
+              :disabled="!isWritedContent"
               type="primary"
               plain
               @click="handleRewrite"
@@ -83,7 +83,7 @@ export default {
     },
     isWritedContent: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   computed: {

@@ -100,7 +100,7 @@ export default {
           keywords: this.keyWords,
           hash_id: this.hashId,
         };
-        // await aiService.generateOutline(data);
+        await aiService.generateOutline(data);
         Vue.notify({
           type: 'success',
           title: 'Success',
@@ -163,60 +163,28 @@ export default {
       this.writingContent(this.outlineData);
     },
     async getResult() {
-      // try {
-      //   const res = await aiService.getState(this.hashId);
-      //   if (!res?.data?.generate_outline?.is_done) {
-      //     clearTimeout(this.crawlDataTimeout);
-      //     this.crawlDataTimeout = setTimeout(() => {
-      //       this.getResult();
-      //     }, 2000);
-      //   } else {
-      //     Vue.notify({
-      //       type: 'success',
-      //       title: 'Success',
-      //       duration: 2000,
-      //       text: res?.data?.message,
-      //     });
-      //     clearTimeout(this.crawlDataTimeout);
-      //     this.isCreatingOutline = false;
-      //     this.outlineData = res?.data?.generate_outline?.outline;
-      //     this.images = res?.data?.generate_outline?.images;
-      //   }
-      // } catch (error) {
-      //   this.isCreatingOutline = false;
-      // }
-      const res = {
-    data: {
-        generate_outline: {
-            is_done: true,
-            h2s_generated: [
-                '1. \'Giới thiệu về công ty VCCorp\'',
-                '2. \'Cơ hội tuyển dụng tại VCCorp\'',
-                '3. \'Thông tin liên hệ VCCorp\'',
-                '4. \'Chia sẻ thông tin VCCorp tới bạn bè\'',
-                '5. \'Top công ty cùng lĩnh vực với VCCorp\'',
-            ],
-            summary: '[1] Đoạn văn trên giới thiệu về các dịch vụ và tính năng mà TopCV cung cấp trong lĩnh vực tiếp thị. Các dịch vụ bao gồm đăng ký tài khoản, tìm kiếm việc làm phù hợp, việc làm trong lĩnh vực công nghệ thông tin và việc làm cấp cao, tạo hồ sơ và CV, mẫu CV và mẫu Cover letter, dịch vụ tư vấn viết CV theo ngành nghề, thư viện CV theo ngành nghề, tạo TopCV Profile, danh sách công ty, phát triển sự nghiệp, cuộc thi TopCV Skills, trắc nghiệm tính cách MBTI và MI, công cụ tính lương, thuế thu nhập cá nhân, lãi suất kép, kế hoạch tiết kiệm, bảo hiểm thất nghiệp và bảo hiểm xã hội, ứng dụng di động TopCV và đăng tuyển và tìm kiếm hồ sơ cho nhà tuyển dụng. TopCV là một công ty cổ phần truyền thông Việt Nam (VCcorp).\n\n',
-            outline: [
-                'I. Giới thiệu về công ty VCCorp\n- Sự ra đời và phát triển của VCCorp\n- Sứ mệnh và giá trị cốt lõi của VCCorp\n- Lịch sử hình thành và phát triển của VCCorp',
-                'II. Cơ hội tuyển dụng tại VCCorp\n- Các vị trí tuyển dụng đang mở\n- Quyền lợi của nhân viên khi làm việc tại VCCorp\n- Quy trình tuyển dụng tại VCCorp\n- Kinh nghiệm và gợi ý để ứng tuyển thành công tại VCCorp',
-                'III. Thông tin liên hệ VCCorp\n- Địa chỉ văn phòng và chi nhánh của VCCorp\n- Các kênh liên hệ chính thức của VCCorp\n- Giờ làm việc và thời gian phản hồi của VCCorp\n- Cách tìm hiểu thêm thông tin về VCCorp',
-                'IV. Chia sẻ thông tin VCCorp tới bạn bè\n- Cách chia sẻ thông tin VCCorp trên các mạng xã hội\n- Những thông tin nổi bật để chia sẻ về VCCorp\n- Lợi ích khi chia sẻ thông tin về VCCorp',
-                'V. Top công ty cùng lĩnh vực với VCCorp\n- Giới thiệu về những công ty có cùng lĩnh vực hoạt động\n- So sánh vị trí của VCCorp so với các công ty khác\n- Phân tích ưu điểm và nhược điểm của VCCorp so với các công ty khác.',
-            ],
-            images: [],
-        },
-        writing: {
-            is_done: true,
-        },
-        generate_content_outline: {
-            is_done: true,
-        },
-    },
-};
-      this.isCreatingOutline = false;
-      this.outlineData = res?.data?.generate_outline?.outline;
-      this.images = res?.data?.generate_outline?.images;
+      try {
+        const res = await aiService.getState(this.hashId);
+        if (!res?.data?.generate_outline?.is_done) {
+          clearTimeout(this.crawlDataTimeout);
+          this.crawlDataTimeout = setTimeout(() => {
+            this.getResult();
+          }, 2000);
+        } else {
+          Vue.notify({
+            type: 'success',
+            title: 'Success',
+            duration: 2000,
+            text: res?.data?.message,
+          });
+          clearTimeout(this.crawlDataTimeout);
+          this.isCreatingOutline = false;
+          this.outlineData = res?.data?.generate_outline?.outline;
+          this.images = res?.data?.generate_outline?.images;
+        }
+      } catch (error) {
+        this.isCreatingOutline = false;
+      }
     },
     async writingContent(outline) {
       try {
@@ -237,9 +205,8 @@ export default {
         this.isWriting = false;
       }
     },
-    handleRemoveOutline(outlineId) {
-      const findIndexById = this.outlineData.findIndex((obj) => obj?.id === outlineId);
-      this.outlineData.splice(findIndexById, 1);
+    handleRemoveOutline(index) {
+      this.outlineData.splice(index, 1);
     },
     handleEditData(data) {
       this.outlineData[data?.index] = data?.form?.content;
