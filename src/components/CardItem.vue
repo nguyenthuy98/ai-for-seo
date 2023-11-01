@@ -166,8 +166,6 @@ export default {
       this.form.count = 0;
     },
     handleRewrite() {
-      console.log('2', this.form);
-      debugger;
       this.$emit('rewrite', {
         index: this.itemIndex,
         form: this.form,

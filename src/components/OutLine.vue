@@ -55,7 +55,17 @@ export default {
   data() {
     return {
       isDragging: false,
+      outlineData: [],
     };
+  },
+  mounted() {
+    this.outlineData = this.data.map((item, index) => {
+      const temp = item.split('\n');
+      return {
+        id: index,
+        item: temp,
+      };
+    });
   },
   computed: {
     dragOptions() {
@@ -65,15 +75,6 @@ export default {
         disabled: false,
         ghostClass: 'ghost',
       };
-    },
-    outlineData() {
-      return this.data.map((item, index) => {
-        const temp = item.split('\n');
-        return {
-          id: index,
-          item: temp,
-        };
-      });
     },
   },
   methods: {
