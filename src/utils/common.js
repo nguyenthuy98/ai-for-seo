@@ -1,3 +1,5 @@
+import Vue from 'vue';
+
 export function randomstring() {
   const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
   const stringLength = 8;
@@ -9,8 +11,8 @@ export function randomstring() {
   return randomstring;
 }
 
-export function copyText(self, text) {
-  self.$clipboard(text);
+export function copyText(text) {
+  navigator.clipboard.writeText(text);
   Vue.notify({
     type: 'success',
     title: 'Thành công',
