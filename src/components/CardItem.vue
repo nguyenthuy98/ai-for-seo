@@ -74,8 +74,8 @@ export default {
   name: 'CardItem',
   props: {
     data: {
-      type: Array,
-      default: () => [],
+      type: String,
+      default: '',
     },
     itemIndex: {
       type: Number,
@@ -85,24 +85,21 @@ export default {
       type: Boolean,
       default: false,
     },
+    currentWordsCount: {
+      type: Number,
+      default: 0,
+    },
   },
   computed: {
     outlineContent() {
-      let temp = '';
-      this.data.forEach((item, index) => {
-        if (index === 0) {
-          temp = item;
-        } else {
-          temp = `${temp}\n${item}`;
-        }
-      });
-      return temp;
+      return this.data;
     },
   },
   watch: {
     outlineContent: {
       handler() {
         this.form.content = this.outlineContent;
+        this.form.count = this.currentWordsCount;
       },
       deep: true,
       immediate: true,
@@ -147,7 +144,7 @@ export default {
       this.isHover = true;
     },
     handleRemoveCardItem() {
-      this.$emit('remove');
+      this.$emit('remove', this.itemIndex);
     },
     handleSave() {
       this.$refs.form.validate(async (valid) => {
@@ -162,8 +159,7 @@ export default {
     },
     handleCancel() {
       this.isEditMode = false;
-      this.form.content = this.data?.content;
-      this.form.count = 0;
+      this.form.content = this.outlineContent;
     },
     handleRewrite() {
       this.$emit('rewrite', {

@@ -1,22 +1,32 @@
 <template>
-  <div class="content">
-    <div v-if="loading" class="card is-loading">
-      <el-card>
-        <h2></h2>
-        <p></p>
-        <p></p>
-      </el-card>
-    </div>
-    <el-card v-else class="content-card">
+  <div class="content h-100">
+    <el-card class="content-card">
       <div class="main-content-card" id="card-content">
-        <div id="content" v-html="contentData"></div>
-        <div v-if="images?.length > 0 && isShowContent">
-          <div v-for="image in images" :key="image">
-            <img :src="image" alt="image" />
+        <div v-if="loading">
+          <div class="typing-container">
+            <p class="typing-text">Loading content</p>
+            <div class="typing-dots">
+              <div class="dot dot1"></div>
+              <div class="dot dot2"></div>
+              <div class="dot dot3"></div>
+            </div>
           </div>
         </div>
+        <div v-else id="content" v-html="contentData"></div>
+        <div
+          v-if="images?.length > 0 && isShowContent"
+          style="display: flex; justify-content: center; flex-direction: column"
+        >
+          <img
+            v-for="image in images"
+            :key="image"
+            :src="image"
+            alt="image"
+            style="margin: 16px auto; width: 80%"
+          />
+        </div>
       </div>
-      <div v-if="!loading" class="content-card-footer">
+      <div class="content-card-footer">
         <el-button
           :disabled="!isShowContent"
           type="primary"
@@ -57,6 +67,20 @@ export default {
       default: false,
     },
   },
+  // data() {
+  //   return {
+  //     currentIndex: 0,
+  //     isGenerated: true,
+  //   };
+  // },
+  // watch: {
+  //   contentData: {
+  //     handler() {
+  //       console.log('change');
+  //       this.handleDisplayWords();
+  //     },
+  //   },
+  // },
   methods: {
     copyText,
     handleCopyText() {
@@ -84,6 +108,28 @@ export default {
         });
       }
     },
+    // handleDisplayWords() {
+    //   const htmlContent = document.getElementById('content').innerText;
+    //   const textWithoutNewlines = htmlContent.replace(/\n/g, ' ');
+    //   this.writeText(textWithoutNewlines);
+    // },
+    // writeText() {
+    //   const htmlContent = document.getElementById('content').innerText;
+    //   const textElement = document.getElementById('text');
+    //   if (this.currentIndex < htmlContent?.length) {
+    //     textElement.innerHTML += htmlContent.charAt(this.currentIndex);
+    //     this.currentIndex += 1;
+    //     if (htmlContent[this.currentIndex - 1] === '\n') {
+    //       textElement.innerHTML += '<br>';
+    //     }
+    //     this.isGenerated = true;
+    //     setTimeout(this.writeText, 20);
+    //   } else {
+    //     clearTimeout(this.writeText);
+    //     this.currentIndex = 0;
+    //     this.isGenerated = false;
+    //   }
+    // },
   },
   computed: {
     contentData() {
@@ -111,21 +157,20 @@ export default {
   .card {
     margin-top: 0px;
   }
+  .el-card__body {
+    height: 100%;
+  }
 }
 .main-content-card {
   overflow: auto;
-  height: 65vh;
+  height: 90%;
 }
 .content-card-footer {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   width: 100%;
-  text-align: right;
-  padding-top: 16px;
-}
-.p-20 {
-  padding: 20px;
-}
-.mx-20 {
-  margin: 0px 20px;
+  height: 10%;
+  display: flex;
+  justify-content: end;
+  align-items: end;
 }
 </style>

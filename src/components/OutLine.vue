@@ -4,22 +4,24 @@
       :list="outlineData"
       v-bind="dragOptions"
       @start="isDragging = true"
-      @end="isDragging = false"
+      @end="onEnd"
     >
       <transition-group type="transition" name="flip-list">
         <div
           class="list-group-item"
           v-for="(element, index) in outlineData"
-          :key="element?.id"
+          :key="element?.order"
         >
           <card-item
-            :key="element?.id"
+            :key="element?.order"
             :itemIndex="index"
+            :oldIndex="element?.newIndex ?? element?.order"
             :data="element?.item"
             :isWritedContent="isWritedContent"
+            :currentWordsCount="currentWordsCount[index]"
             @sendData="handleSendData"
             @rewrite="handleRewriteData"
-            @remove="handleRemoveOutLine(index)"
+            @remove="handleRemoveOutLine"
           />
         </div>
       </transition-group>
@@ -51,19 +53,24 @@ export default {
       type: Boolean,
       default: false,
     },
+    currentWordsCount: {
+      type: Array,
+      default: () => [],
+    },
   },
   data() {
     return {
       isDragging: false,
       outlineData: [],
+      isFirst: true,
     };
   },
   mounted() {
     this.outlineData = this.data.map((item, index) => {
-      const temp = item.split('\n');
+      const temp = item?.split('\n');
       return {
-        id: index,
-        item: temp,
+        item,
+        order: index,
       };
     });
   },
@@ -88,14 +95,24 @@ export default {
     handleRewriteData(data) {
       this.$emit('rewrite', data);
     },
+    onEnd(e) {
+      this.isDragging = false;
+      this.$emit('resetOutline', this.outlineData);
+      this.outlineData[e.newIndex] = {
+        ...this.outlineData[e.newIndex],
+        oldIndex: e.oldIndex,
+        newIndex: e.newIndex,
+      };
+    },
   },
 };
 </script>
 
 <style lang="scss">
 .outline-content {
-  height: 70vh;
+  height: 90%;
   overflow: auto;
+  padding-right: 16px;
   .button {
     margin-top: 35px;
   }

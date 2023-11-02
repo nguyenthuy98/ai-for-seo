@@ -1,7 +1,6 @@
 @import './variable';
 
 body {
-  padding: 30px 0;
   margin: 0px;
   min-width: 1337px;
   overflow: auto;
@@ -56,6 +55,7 @@ body {
 .common-font {
   font-family: inherit;
   line-height: 25px;
+  text-wrap: pretty;
 }
 .ml-4 {
   margin-left: 4px;
@@ -71,4 +71,59 @@ body {
 }
 .h-100 {
   height: 100%;
+}
+.p-20 {
+  padding: 20px;
+}
+.mx-20 {
+  margin: 0px 20px;
+}
+d-none {
+  opacity: 0;
+}
+.typing-container {
+  display: flex;
+  align-items: center;
+}
+
+.typing-text {
+  font-size: 14px;
+  margin: 0;
+}
+
+.typing-dots {
+  display: inline-block;
+  width: 30px;
+  text-align: center;
+}
+
+.dot {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background-color: #333;
+  margin: 0 3px;
+  animation: typing 1s infinite;
+}
+
+.dot1 {
+  animation-delay: 0.2s;
+}
+
+.dot2 {
+  animation-delay: 0.4s;
+}
+
+.dot3 {
+  animation-delay: 0.6s;
+}
+
+@keyframes typing {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
 }

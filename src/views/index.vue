@@ -7,7 +7,7 @@
       >
     </div>
     <div class="main-layout" v-if="isShowLayout">
-      <el-container class="main-container">
+      <el-container class="main-container h-100">
         <el-row class="main-content" :gutter="20">
           <el-col :span="9" class="h-100">
             <el-aside class="aside">
@@ -34,19 +34,24 @@
                   :isWritedContent="contentData.length > 0"
                   :key="key"
                   :data="outlineData"
+                  :currentWordsCount="currentWordsCount"
+                  @resetOutline="handleResetOutline"
                   @sendData="handleEditData"
                   @rewrite="handleRewriteData"
                   @remove="handleRemoveOutline"
                 />
                 <el-row class="button-area">
-                  <el-button type="primary" @click="handleWriteOutline"
+                  <el-button
+                    :disabled="isWriting"
+                    type="primary"
+                    @click="handleWriteOutline"
                     >Viết toàn bộ nội dung</el-button
                   >
                 </el-row>
               </div>
             </el-aside>
           </el-col>
-          <el-col :span="14" class="float-right h-100">
+          <el-col :span="15" class="float-right h-100">
             <el-main class="main">
               <Content
                 :loading="isWriting"
@@ -87,7 +92,8 @@ export default {
       isWriting: false,
       images: [],
       isShowLayout: false,
-      currentCount: 0,
+      currentWordsCount: [],
+      oldH2List: [],
     };
   },
   methods: {
@@ -153,7 +159,7 @@ export default {
           });
           clearTimeout(this.crawlDataTimeout);
           this.isWriting = false;
-          this.contentData[index] = res?.data?.generate_content_outline?.content;
+          this.contentData = this.replaceSubstringByIndex(res?.data?.writing?.content, res?.data?.generate_content_outline?.content, res?.data?.generate_content_outline?.start_index, res?.data?.generate_content_outline?.end_index);
         }
       } catch (error) {
         this.isWriting = false;
@@ -161,6 +167,11 @@ export default {
     },
     handleWriteOutline() {
       this.writingContent(this.outlineData);
+    },
+    replaceSubstringByIndex(inputString, replacement, startIndex, endIndex) {
+      const firstPart = inputString.slice(0, startIndex);
+      const secondPart = inputString.slice(endIndex);
+      return `${firstPart}${replacement}${secondPart}`;
     },
     async getResult() {
       try {
@@ -207,10 +218,11 @@ export default {
     },
     handleRemoveOutline(index) {
       this.outlineData.splice(index, 1);
+      this.key += 1;
     },
     handleEditData(data) {
       this.outlineData[data?.index] = data?.form?.content;
-      this.currentCount = data?.form?.count;
+      this.currentWordsCount[data?.index] = data?.form?.count;
       this.key += 1;
     },
     async handleRewriteData(data) {
@@ -236,18 +248,24 @@ export default {
         this.isWriting = false;
       }
     },
+    handleResetOutline(data) {
+      const temp = data.map((el) => el?.item);
+      this.outlineData = temp;
+    },
   },
 };
 </script>
 <style lang="scss">
 .home-layout {
   margin: 0 auto;
-  padding: 0;
+  padding: 20px 50px;
+  height: 100vh;
 }
 .header-input {
   width: 40%;
   margin: 0 auto;
   display: flex;
+  height: 40px;
   .el-input__inner {
     border-radius: 12px;
   }
@@ -259,34 +277,36 @@ export default {
 }
 .main-layout {
   width: calc(100vw - 100px);
+  height: calc(100vh - 100px);
   margin: auto;
   position: relative;
-  height: auto;
   border-radius: 12px;
   .main-content {
-    padding: 20px;
     margin: 0 !important;
     height: 100%;
     width: 100%;
   }
   .aside {
-    padding: 16px;
+    padding: 20px;
     width: 100% !important;
-    height: 80vh;
+    height: 100%;
     .out-line {
       position: relative;
       height: 100%;
     }
     .button-area {
-      position: absolute;
-      text-align: right;
-      bottom: 0;
-      right: 0;
+      height: 10%;
+      position: relative;
+      button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
     }
   }
   .main {
     width: 100% !important;
-    height: 80vh;
+    height: 100%;
   }
 }
 </style>
